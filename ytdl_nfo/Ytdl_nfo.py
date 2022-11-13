@@ -4,9 +4,10 @@ from .nfo import get_config
 
 
 class Ytdl_nfo:
-    def __init__(self, file_path, extractor=None):
+    def __init__(self, file_path, extractor=None, overwrite=False):
         self.path = file_path
         self.dir = os.path.dirname(file_path)
+        self._overwrite = overwrite
 
         # Read json data
         with open(self.path, "rt", encoding="utf-8") as f:
@@ -33,7 +34,9 @@ class Ytdl_nfo:
         return True
 
     def write_nfo(self):
-        self.nfo.write_nfo(f'{self.filename}.nfo')
+        output_path = f'{self.filename}.nfo'
+        if self._overwrite or not os.path.isfile(output_path):
+            self.nfo.write_nfo(output_path)
 
     def print_data(self):
         print(json.dumps(self.data, indent=4, sort_keys=True))
